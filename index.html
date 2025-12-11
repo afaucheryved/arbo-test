@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test d'arborescence - Sonification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .modal-content p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .modal-buttons button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-1 { background: #4CAF50; color: white; }
+        .btn-2 { background: #2196F3; color: white; }
+        .btn-3 { background: #FF9800; color: white; }
+        .btn-4 { background: #E91E63; color: white; }
+
+        .controls {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .info-item label {
+            font-size: 12px;
+            color: #666;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .info-item .value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .target-function {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .start-btn:hover:not(:disabled) {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .start-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .tree-container {
+            padding: 30px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .tree-node {
+            margin-left: 20px;
+        }
+
+        .tree-item {
+            padding: 12px 15px;
+            margin: 5px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .tree-item:hover {
+            background: #f0f0f0;
+        }
+
+        .tree-item.parent {
+            background: #e3f2fd;
+            font-weight: bold;
+        }
+
+        .tree-item.parent:hover {
+            background: #bbdefb;
+        }
+
+        .tree-item.leaf {
+            background: #fff;
+            border: 2px solid #e0e0e0;
+        }
+
+        .tree-item.leaf:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .tree-item.correct {
+            background: #4CAF50 !important;
+            color: white;
+            animation: pulse 0.5s;
+        }
+
+        .tree-item.wrong {
+            background: #f44336 !important;
+            color: white;
+            animation: shake 0.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .toggle-icon {
+            display: inline-block;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .results-modal .modal-content {
+            max-width: 600px;
+        }
+
+        .result-stats {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .result-stats p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .download-btn {
+            width: 100%;
+            padding: 15px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .download-btn:hover {
+            background: #1976D2;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            margin: 15px 0;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 Test d'arborescence - Sonification de données</h1>
+            <p>Trouvez les fonctionnalités le plus rapidement possible</p>
+        </div>
+
+        <div class="controls">
+            <div class="info-bar">
+                <div class="info-item">
+                    <label>Progression</label>
+                    <div class="value" id="progress">0/0</div>
+                </div>
+                <div class="info-item">
+                    <label>Clics</label>
+                    <div class="value" id="clicks">0</div>
+                </div>
+                <div class="info-item">
+                    <label>Temps</label>
+                    <div class="value" id="timer">0.0s</div>
+                </div>
+            </div>
+
+            <div id="targetDisplay" class="target-function" style="display: none;">
+                Trouvez : <span id="targetName"></span>
+            </div>
+
+            <button class="start-btn" id="startBtn">Démarrer le test</button>
+        </div>
+
+        <div class="tree-container" id="treeContainer"></div>
+    </div>
+
+    <!-- Modal choix arborescence -->
+    <div class="modal active" id="choiceModal">
+        <div class="modal-content">
+            <h2>Choix de l'arborescence</h2>
+            <p>Quelle arborescence souhaitez-vous tester ?</p>
+            <div class="modal-buttons">
+                <button class="btn-1" onclick="selectTree(1)">1. Génération & Sources</button>
+                <button class="btn-2" onclick="selectTree(2)">2. Transformation</button>
+                <button class="btn-3" onclick="selectTree(3)">3. Sources et Entrées</button>
+                <button class="btn-4" onclick="selectTree(4)">4. Arbo du SCRIM</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal nombre de tests -->
+    <div class="modal" id="numTestsModal">
+        <div class="modal-content">
+            <h2>Nombre de tests</h2>
+            <p>Combien de fonctionnalités voulez-vous tester ?</p>
+            <input type="number" id="numTestsInput" min="1" value="5">
+            <button class="start-btn" onclick="startTests()">Commencer</button>
+        </div>
+    </div>
+
+    <!-- Modal résultats -->
+    <div class="modal results-modal" id="resultsModal">
+        <div class="modal-content">
+            <h2>🎉 Test terminé !</h2>
+            <div class="result-stats" id="resultStats"></div>
+            <button class="download-btn" onclick="downloadResults()">📥 Télécharger les résultats (JSON)</button>
+            <button class="start-btn" onclick="location.reload()">Nouveau test</button>
+        </div>
+    </div>
+
+    <script>
+        // Données globales
+        let selectedTree = null;
+        let allFunctionalities = [];
+        let currentTest = 0;
+        let totalTests = 0;
+        let testStarted = false;
+        let currentFunctionality = null;
+        let startTime = null;
+        let clickCount = 0;
+        let clickedPath = [];
+        let results = [];
+        let timerInterval = null;
+
+        // Arborescences
+        const trees = {
+            1: {
+                "1. Génération & Sources de Données": {
+                    "Générateurs de Signaux Audio": {
+                        "Click": null,
+                        "Noises": {"Brownian": null, "White": null},
+                        "Oscillators": {"SineWave": null, "Square": null, "SawTooth": null}
+                    },
+                    "Générateurs de Courbes de Contrôle": {
+                        "Envelopes": {"ADSR": null, "Fade In": null, "Fade Out": null}
+                    }
+                }
+            },
+            2: {
+                "2. Transformation & Traitement": {
+                    "Traitement Mathématique & Mapping": {
+                        "Arithmetics": {"+": null, "-": null, "×": null, "÷": null},
+                        "Trigonometry": {"Sin": null, "Cos": null, "Tan": null}
+                    }
+                }
+            },
+            3: {
+                "1. Sources et Entrées": {
+                    "Générateurs de signaux": {
+                        "Click": null,
+                        "Noises": {"Brownian": null, "White": null},
+                        "Oscillators": {"SineWave": null, "Square": null}
+                    }
+                }
+            },
+            4: {
+                "Générateur de signaux": {
+                    "Sources": {
+                        "Brownian": null, "White": null, "Square": null, "SineWave": null,
+                        "CosineWave": null, "Triangle": null, "SawTooth": null, "TanWave": null
+                    },
+                    "Génération d'enveloppe": {"ADSR": null, "Fade In": null, "Fade Out": null}
+                },
+                "Fonctions trigonométriques": {
+                    "Atan": null, "Cos": null, "Atan2": null, "Asin": null,
+                    "Acos": null, "Sin": null, "Tan": null
+                },
+                "Fonctions mathématiques": {
+                    "Ceil": null, "Floor": null, "Round": null, "Power": null,
+                    "Abs": null, "Sign": null, "SQRT": null, "Linear": null
+                },
+                "Opérateurs logiques et mathématiques": {
+                    "=": null, ">=": null, "!=": null, "HigherThan": null,
+                    "LowerThan": null, "+": null, "*": null, "-": null,
+                    "/": null, "and": null, "not": null, "or": null
+                },
+                "Programming": {
+                    "Pass": null, "Console Log": null, "if-then-else": null, "Custom": null
+                },
+                "IHM": {"click": null, "Text": null, "Range": null, "Number": null},
+                "Input Data": {
+                    "Web Search": {"HTTP Text": null, "HTTP Audio": null},
+                    "Input Files": {"Load Text": null, "Load CSV": null, "Load XLSX": null, "Load Image": null}
+                },
+                "Configuration Audio Output": {
+                    "Text to Stereo": null, "Mono to all Channels": null, "Several to mono": null
+                },
+                "Protocole de communication": {"TCP": null, "UDP": null},
+                "Signal processing": {"Retain Values": null, "Smooth": null, "Modular Sine": null},
+                "Fonctions sur listes": {
+                    "Serve Slice": null, "Diff ?+ retain": null, "Length": null,
+                    "Retain Min": null, "Retain Max": null, "Get Component": null
+                },
+                "Conversions": {
+                    "Str to ASCII": null, "Radian to Degrees": null, "Degrees to Radian": null,
+                    "MID to frequency": null,
+                    "Parse": {"Parse Float": null, "Parse Int": null, "Parse JSON": null, "Parse OSC": null}
+                }
+            }
+        };
+
+        function selectTree(treeNum) {
+            selectedTree = treeNum;
+            document.getElementById('choiceModal').classList.remove('active');
+            allFunctionalities = getAllFunctionalities(trees[treeNum]);
+            renderTree(trees[treeNum]);
+        }
+
+        function getAllFunctionalities(tree, path = "") {
+            let funcs = [];
+            for (let [key, value] of Object.entries(tree)) {
+                const currentPath = path ? `${path}/${key}` : key;
+                if (value === null) {
+                    funcs.push(currentPath);
+                } else {
+                    funcs = funcs.concat(getAllFunctionalities(value, currentPath));
+                }
+            }
+            return funcs;
+        }
+
+        function renderTree(tree, container = document.getElementById('treeContainer'), path = "") {
+            container.innerHTML = '';
+            for (let [key, value] of Object.entries(tree)) {
+                const currentPath = path ? `${path}/${key}` : key;
+                const div = document.createElement('div');
+                div.className = 'tree-node';
+                
+                const item = document.createElement('div');
+                item.className = value === null ? 'tree-item leaf' : 'tree-item parent';
+                item.dataset.path = currentPath;
+                
+                if (value !== null) {
+                    const icon = document.createElement('span');
+                    icon.className = 'toggle-icon';
+                    icon.textContent = '▶';
+                    item.appendChild(icon);
+                    
+                    const childContainer = document.createElement('div');
+                    childContainer.style.display = 'none';
+                    childContainer.className = 'tree-node';
+                    
+                    item.onclick = () => {
+                        if (testStarted) {
+                            clickCount++;
+                            updateDisplay();
+                            clickedPath.push({type: 'open', path: currentPath, timestamp: Date.now()});
+                        }
+                        
+                        const isOpen = childContainer.style.display === 'block';
+                        childContainer.style.display = isOpen ? 'none' : 'block';
+                        icon.textContent = isOpen ? '▶' : '▼';
+                    };
+                    
+                    renderTree(value, childContainer, currentPath);
+                    div.appendChild(item);
+                    div.appendChild(childContainer);
+                } else {
+                    item.onclick = () => handleLeafClick(currentPath, item);
+                    div.appendChild(item);
+                }
+                
+                const text = document.createTextNode(key);
+                item.appendChild(text);
+                container.appendChild(div);
+            }
+        }
+
+        function handleLeafClick(path, element) {
+            if (!testStarted) return;
+            
+            clickCount++;
+            updateDisplay();
+            clickedPath.push({type: 'click', path: path, timestamp: Date.now()});
+            
+            if (path === currentFunctionality) {
+                element.classList.add('correct');
+                setTimeout(() => endCurrentTest(true), 500);
+            } else {
+                element.classList.add('wrong');
+                setTimeout(() => element.classList.remove('wrong'), 500);
+                alert(`Mauvaise fonctionnalité!\nVous avez sélectionné "${path.split('/').pop()}" au lieu de "${currentFunctionality.split('/').pop()}"`);
+            }
+        }
+
+        document.getElementById('startBtn').onclick = () => {
+            document.getElementById('numTestsModal').classList.add('active');
+            document.getElementById('numTestsInput').max = allFunctionalities.length;
+        };
+
+        function startTests() {
+            totalTests = parseInt(document.getElementById('numTestsInput').value);
+            if (totalTests < 1 || totalTests > allFunctionalities.length) {
+                alert('Nombre invalide!');
+                return;
+            }
+            
+            document.getElementById('numTestsModal').classList.remove('active');
+            testStarted = true;
+            document.getElementById('startBtn').disabled = true;
+            results = [];
+            nextFunctionality();
+        }
+
+        function nextFunctionality() {
+            if (currentTest >= totalTests) {
+                finishTest();
+                return;
+            }
+            
+            currentTest++;
+            clickCount = 0;
+            clickedPath = [];
+            currentFunctionality = allFunctionalities[Math.floor(Math.random() * allFunctionalities.length)];
+            
+            document.getElementById('targetDisplay').style.display = 'block';
+            document.getElementById('targetName').textContent = currentFunctionality.split('/').pop();
+            updateDisplay();
+            
+            startTime = Date.now();
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 100);
+        }
+
+        function updateTimer() {
+            if (!startTime) return;
+            const elapsed = (Date.now() - startTime) / 1000;
+            document.getElementById('timer').textContent = elapsed.toFixed(1) + 's';
+        }
+
+        function updateDisplay() {
+            document.getElementById('progress').textContent = `${currentTest}/${totalTests}`;
+            document.getElementById('clicks').textContent = clickCount;
+        }
+
+        function endCurrentTest(found) {
+            clearInterval(timerInterval);
+            const duration = (Date.now() - startTime) / 1000;
+            
+            results.push({
+                test_number: currentTest,
+                functionality: currentFunctionality,
+                functionality_name: currentFunctionality.split('/').pop(),
+                found: found,
+                duration_seconds: Math.round(duration * 100) / 100,
+                click_count: clickCount,
+                path_taken: clickedPath,
+                timestamp: new Date().toISOString()
+            });
+            
+            setTimeout(nextFunctionality, 1000);
+        }
+
+        function finishTest() {
+            testStarted = false;
+            clearInterval(timerInterval);
+            
+            const totalTime = results.reduce((sum, r) => sum + r.duration_seconds, 0);
+            const avgTime = totalTime / results.length;
+            const totalClicks = results.reduce((sum, r) => sum + r.click_count, 0);
+            const avgClicks = totalClicks / results.length;
+            
+            document.getElementById('resultStats').innerHTML = `
+                <p><strong>Tests complétés :</strong> ${results.length}</p>
+                <p><strong>Temps total :</strong> ${totalTime.toFixed(2)}s</p>
+                <p><strong>Temps moyen :</strong> ${avgTime.toFixed(2)}s</p>
+                <p><strong>Clics totaux :</strong> ${totalClicks}</p>
+                <p><strong>Clics moyens :</strong> ${avgClicks.toFixed(1)}</p>
+            `;
+            
+            document.getElementById('resultsModal').classList.add('active');
+        }
+
+        function downloadResults() {
+            const data = {
+                session_metadata: {
+                    arborescence_choice: selectedTree,
+                    total_tests: totalTests,
+                    completed_tests: results.length,
+                    total_time_seconds: results.reduce((sum, r) => sum + r.duration_seconds, 0),
+                    average_time_seconds: results.reduce((sum, r) => sum + r.duration_seconds, 0) / results.length,
+                    total_clicks: results.reduce((sum, r) => sum + r.click_count, 0),
+                    average_clicks: results.reduce((sum, r) => sum + r.click_count, 0) / results.length,
+                    session_start: results[0].timestamp,
+                    session_end: new Date().toISOString()
+                },
+                results: results
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `test_results_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        }
+    </script>
+</body>
+</html>
