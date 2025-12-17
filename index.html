@@ -326,19 +326,19 @@
         <div class="tree-container" id="treeContainer"></div>
     </div>
 
-    <!-- Modal choix arborescence -->
-    <div class="modal active" id="choiceModal">
-        <div class="modal-content">
-            <h2>Choix de l'arborescence</h2>
-            <p>Quelle arborescence souhaitez-vous tester ?</p>
-            <div class="modal-buttons">
-                <button class="btn-1" onclick="selectTree(1)">1. Arbo primaire</button>
-                <button class="btn-2" onclick="selectTree(2)">2. Arbo secondaire</button>
-                <button class="btn-3" onclick="selectTree(3)">3. 2eme arbo secondaire</button>
-                <button class="btn-4" onclick="selectTree(4)">4. Arbo du SCRIME</button>
-            </div>
+    <!-- Modal choix saison -->
+<div class="modal active" id="seasonModal">
+    <div class="modal-content">
+        <h2>Choix de la saison</h2>
+        <p>Selectionnez votre saison de naissance : </p>
+        <div class="modal-buttons">
+            <button class="btn-1" onclick="selectSeason('hiver')">🌨️ Hiver (1→2→4)</button>
+            <button class="btn-2" onclick="selectSeason('printemps')">🌸 Printemps (4→3→1)</button>
+            <button class="btn-3" onclick="selectSeason('ete')">☀️ Été (1→3→4)</button>
+            <button class="btn-4" onclick="selectSeason('automne')">🍂 Automne (4→2→1)</button>
         </div>
     </div>
+
 
     <!-- Modal nombre de tests -->
     <div class="modal" id="numTestsModal">
@@ -361,19 +361,170 @@
     </div>
 
     <script>
-        // Données globales
-        let selectedTree = null;
-        let allFunctionalities = [];
-        let currentTest = 0;
-        let totalTests = 0;
-        let testStarted = false;
-        let currentFunctionality = null;
-        let startTime = null;
-        let clickCount = 0;
-        let clickedPath = [];
-        let results = [];
-        let timerInterval = null;
+// Données globales
+let selectedTree = null;
+let selectedSeason = null;
+let currentTreeIndex = 0;
+let treesOrder = [];
+let allFunctionalities = [];
+let currentTest = 0;
+let totalTests = 0;
+let testStarted = false;
+let currentFunctionality = null;
+let startTime = null;
+let clickCount = 0;
+let clickedPath = [];
+let results = [];
+let timerInterval = null;
 
+// Arborescences (inchangé)
+const trees = { ... }; // (garde ton objet trees existant)
+
+// Définition des ordres de saison
+const seasons = {
+    hiver: [1, 2, 4],
+    printemps: [4, 3, 1],
+    ete: [1, 3, 4],
+    automne: [4, 2, 1]
+};
+
+// Fonction pour sélectionner une saison
+function selectSeason(season) {
+    selectedSeason = season;
+    treesOrder = seasons[season];
+    document.getElementById('seasonModal').classList.remove('active');
+    document.getElementById('choiceModal').classList.add('active');
+}
+
+// Fonction pour sélectionner une arborescence (modifiée)
+function selectTree(treeNum) {
+    document.getElementById('choiceModal').classList.remove('active');
+    document.getElementById('numTestsModal').classList.add('active');
+}
+
+// Fonction pour démarrer les tests (modifiée)
+function startTests() {
+    totalTests = parseInt(document.getElementById('numTestsInput').value);
+    if (totalTests < 1) {
+        alert('Nombre invalide !');
+        return;
+    }
+    document.getElementById('numTestsModal').classList.remove('active');
+    testStarted = true;
+    currentTest = 0;
+    results = [];
+    currentTreeIndex = 0;
+    startNextTreeTests();
+}
+
+// Fonction pour démarrer les tests de l'arborescence suivante
+function startNextTreeTests() {
+    if (currentTreeIndex >= treesOrder.length) {
+        finishAllTests();
+        return;
+    }
+    selectedTree = treesOrder[currentTreeIndex];
+    allFunctionalities = getAllFunctionalities(trees[selectedTree]);
+    renderTree(trees[selectedTree]);
+    document.getElementById('targetDisplay').style.display = 'none';
+    document.getElementById('startBtn').disabled = false;
+    document.getElementById('startBtn').textContent = `Démarrer l'arborescence ${selectedTree}`;
+    document.getElementById('startBtn').onclick = () => {
+        document.getElementById('startBtn').disabled = true;
+        nextFunctionality();
+    };
+}
+
+// Fonction pour passer à la fonctionnalité suivante (modifiée)
+function nextFunctionality() {
+    if (currentTest >= totalTests) {
+        currentTreeIndex++;
+        currentTest = 0;
+        startNextTreeTests();
+        return;
+    }
+    currentTest++;
+    clickCount = 0;
+    clickedPath = [];
+    currentFunctionality = allFunctionalities[Math.floor(Math.random() * allFunctionalities.length)];
+    document.getElementById('targetDisplay').style.display = 'block';
+    document.getElementById('targetName').textContent = currentFunctionality.split('/').pop();
+    updateDisplay();
+    startTime = Date.now();
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(updateTimer, 100);
+}
+
+// Fonction pour terminer un test (modifiée)
+function endCurrentTest(found) {
+    clearInterval(timerInterval);
+    const duration = (Date.now() - startTime) / 1000;
+    results.push({
+        test_number: currentTest,
+        tree: selectedTree,
+        functionality: currentFunctionality,
+        functionality_name: currentFunctionality.split('/').pop(),
+        found: found,
+        duration_seconds: Math.round(duration * 100) / 100,
+        click_count: clickCount,
+        path_taken: clickedPath,
+        timestamp: new Date().toISOString()
+    });
+    setTimeout(nextFunctionality, 1000);
+}
+
+// Fonction pour terminer tous les tests (modifiée)
+function finishAllTests() {
+    testStarted = false;
+    clearInterval(timerInterval);
+    const totalTime = results.reduce((sum, r) => sum + r.duration_seconds, 0);
+    const avgTime = totalTime / results.length;
+    const totalClicks = results.reduce((sum, r) => sum + r.click_count, 0);
+    const avgClicks = totalClicks / results.length;
+    document.getElementById('resultStats').innerHTML = `
+        <p><strong>Saison :</strong> ${selectedSeason}</p>
+        <p><strong>Arborescences testées :</strong> ${treesOrder.join(' → ')}</p>
+        <p><strong>Tests par arborescence :</strong> ${totalTests}</p>
+        <p><strong>Temps total :</strong> ${totalTime.toFixed(2)}s</p>
+        <p><strong>Temps moyen :</strong> ${avgTime.toFixed(2)}s</p>
+        <p><strong>Clics totaux :</strong> ${totalClicks}</p>
+        <p><strong>Clics moyens :</strong> ${avgClicks.toFixed(1)}</p>
+    `;
+    document.getElementById('resultsModal').classList.add('active');
+}
+
+// Fonction pour télécharger les résultats (modifiée)
+function downloadResults() {
+    const data = {
+        session_metadata: {
+            season: selectedSeason,
+            trees_order: treesOrder,
+            tests_per_tree: totalTests,
+            total_tests: results.length,
+            total_time_seconds: results.reduce((sum, r) => sum + r.duration_seconds, 0),
+            average_time_seconds: results.reduce((sum, r) => sum + r.duration_seconds, 0) / results.length,
+            total_clicks: results.reduce((sum, r) => sum + r.click_count, 0),
+            average_clicks: results.reduce((sum, r) => sum + r.click_count, 0) / results.length,
+            session_start: results[0].timestamp,
+            session_end: new Date().toISOString()
+        },
+        results: results
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `test_results_${selectedSeason}_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+}
+
+// Fonctions existantes (inchangées)
+function getAllFunctionalities(tree, path = "") { ... }
+function renderTree(tree, container = document.getElementById('treeContainer'), path = "") { ... }
+function handleLeafClick(path, element) { ... }
+function updateTimer() { ... }
+function updateDisplay() { ... }
+        
         // Arborescences
         const trees = {
             1: {
