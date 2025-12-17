@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +24,7 @@
             margin: 0 auto;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
         }
 
@@ -46,7 +47,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -62,7 +63,7 @@
             border-radius: 15px;
             max-width: 500px;
             width: 90%;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
         .modal-content h2 {
@@ -96,13 +97,28 @@
 
         .modal-buttons button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .btn-1 { background: #4CAF50; color: white; }
-        .btn-2 { background: #2196F3; color: white; }
-        .btn-3 { background: #FF9800; color: white; }
-        .btn-4 { background: #E91E63; color: white; }
+        .btn-1 {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-2 {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-3 {
+            background: #FF9800;
+            color: white;
+        }
+
+        .btn-4 {
+            background: #E91E63;
+            color: white;
+        }
 
         .controls {
             padding: 30px;
@@ -123,7 +139,7 @@
             background: white;
             padding: 15px 25px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .info-item label {
@@ -229,14 +245,31 @@
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            75% {
+                transform: translateX(10px);
+            }
         }
 
         .toggle-icon {
@@ -293,10 +326,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎵 Test d'arborescence - Sonification de données</h1>
+            <h1>🎵 Test d'arborescence - MODE DEBUG ACTUALISÉ</h1>
             <p>Trouvez les fonctionnalités le plus rapidement possible</p>
         </div>
 
@@ -337,6 +371,7 @@
                 <button class="btn-3" onclick="selectSeason('ete')">☀️ Été (1→3→4)</button>
                 <button class="btn-4" onclick="selectSeason('automne')">🍂 Automne (4→2→1)</button>
             </div>
+        </div>
     </div>
 
     <!-- Modal nombre de tests -->
@@ -344,7 +379,8 @@
         <div class="modal-content">
             <h2>Nombre de tests</h2>
             <p>Combien de fonctionnalités voulez-vous tester ?</p>
-            <input type="number" id="numTestsInput" min="1" value="5">
+            <input type="number" id="numTestsInput" min="1" value="7">
+            <p style="text-align: center; color: #666; margin-bottom: 15px;"><small>(Conseillé : 7)</small></p>
             <button class="start-btn" onclick="startTests()">Commencer</button>
         </div>
     </div>
@@ -803,7 +839,7 @@
                         "Brownian": null, "White": null, "Square": null, "SineWave": null,
                         "CosineWave": null, "Triangle": null, "SawTooth": null, "TanWave": null
                     },
-                    "Génération d'enveloppe": {"ADSR": null, "Fade In": null, "Fade Out": null}
+                    "Génération d'enveloppe": { "ADSR": null, "Fade In": null, "Fade Out": null }
                 },
                 "Fonctions trigonométriques": {
                     "Atan": null, "Cos": null, "Atan2": null, "Asin": null,
@@ -821,16 +857,16 @@
                 "Programming": {
                     "Pass": null, "Console Log": null, "if-then-else": null, "Custom": null
                 },
-                "IHM": {"click": null, "Text": null, "Range": null, "Number": null},
+                "IHM": { "click": null, "Text": null, "Range": null, "Number": null },
                 "Input Data": {
-                    "Web Search": {"HTTP Text": null, "HTTP Audio": null},
-                    "Input Files": {"Load Text": null, "Load CSV": null, "Load XLSX": null, "Load Image": null}
+                    "Web Search": { "HTTP Text": null, "HTTP Audio": null },
+                    "Input Files": { "Load Text": null, "Load CSV": null, "Load XLSX": null, "Load Image": null }
                 },
                 "Configuration Audio Output": {
                     "Text to Stereo": null, "Mono to all Channels": null, "Several to mono": null
                 },
-                "Protocole de communication": {"TCP": null, "UDP": null},
-                "Signal processing": {"Retain Values": null, "Smooth": null, "Modular Sine": null},
+                "Protocole de communication": { "TCP": null, "UDP": null },
+                "Signal processing": { "Retain Values": null, "Smooth": null, "Modular Sine": null, "speed multiplier": null },
                 "Fonctions sur listes": {
                     "Serve Slice": null, "Diff ?+ retain": null, "Length": null,
                     "Retain Min": null, "Retain Max": null, "Get Component": null
@@ -838,7 +874,7 @@
                 "Conversions": {
                     "Str to ASCII": null, "Radian to Degrees": null, "Degrees to Radian": null,
                     "MID to frequency": null,
-                    "Parse": {"Parse Float": null, "Parse Int": null, "Parse JSON": null, "Parse OSC": null}
+                    "Parse": { "Parse Float": null, "Parse Int": null, "Parse JSON": null, "Parse OSC": null }
                 }
             }
         };
@@ -855,7 +891,7 @@
         function startTests() {
             totalTests = parseInt(document.getElementById('numTestsInput').value);
             if (totalTests < 1) {
-                alert('Nombre invalide !');
+                // alert('Nombre invalide !'); // Removed alert
                 return;
             }
             document.getElementById('numTestsModal').classList.remove('active');
@@ -867,44 +903,62 @@
         }
 
         // Fonction pour démarrer les tests de l'arborescence suivante
-function startNextTreeTests() {
-    if (currentTreeIndex >= treesOrder.length) {
-        finishAllTests();
-        return;
-    }
-    selectedTree = treesOrder[currentTreeIndex];
-    allFunctionalities = getAllFunctionalities(trees[selectedTree]);
-    renderTree(trees[selectedTree]);
-    document.getElementById('targetDisplay').style.display = 'none';
-    document.getElementById('startBtn').disabled = false;
-    document.getElementById('startBtn').textContent = `Démarrer l'arborescence ${selectedTree}`;
-    document.getElementById('startBtn').onclick = () => {
-        document.getElementById('startBtn').disabled = true;
-        nextFunctionality();
-    };
-}
+        function startNextTreeTests() {
+            if (currentTreeIndex >= treesOrder.length) {
+                finishAllTests();
+                return;
+            }
+            selectedTree = treesOrder[currentTreeIndex];
 
-// Fonction pour passer à la fonctionnalité suivante
-function nextFunctionality() {
-    if (currentTest >= totalTests) {
-        currentTreeIndex++;
-        currentTest = 0;
-        document.getElementById('startBtn').disabled = false; // Réactive le bouton
-        startNextTreeTests();
-        return;
-    }
-    currentTest++;
-    clickCount = 0;
-    clickedPath = [];
-    currentFunctionality = allFunctionalities[Math.floor(Math.random() * allFunctionalities.length)];
-    document.getElementById('targetDisplay').style.display = 'block';
-    document.getElementById('targetName').textContent = currentFunctionality.split('/').pop();
-    updateDisplay();
-    startTime = Date.now();
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = setInterval(updateTimer, 100);
-}
+            // if (!trees[selectedTree]) { // Removed alert
+            //     alert("ERREUR: Arbre introuvable !");
+            //     return;
+            // }
 
+            allFunctionalities = getAllFunctionalities(trees[selectedTree]);
+            renderTree(trees[selectedTree]);
+            document.getElementById('targetDisplay').style.display = 'none';
+
+            const btn = document.getElementById('startBtn');
+            btn.style.backgroundColor = ""; // Reset style (remove orange)
+            btn.style.border = "";
+            btn.disabled = false; // ENABLED
+            btn.textContent = `Démarrer l'arborescence ${selectedTree}`;
+
+            // Remove potential old listeners by cloning
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+
+            newBtn.onclick = () => {
+                try {
+                    newBtn.disabled = true;
+                    nextFunctionality();
+                } catch (e) {
+                    // alert("ERREUR CRITIQUE CLICK: " + e.message); // Removed alert
+                    newBtn.disabled = false;
+                }
+            };
+        }
+
+        // Fonction pour passer à la fonctionnalité suivante
+        function nextFunctionality() {
+            if (currentTest >= totalTests) {
+                currentTreeIndex++;
+                currentTest = 0;
+                startNextTreeTests();
+                return;
+            }
+            currentTest++;
+            clickCount = 0;
+            clickedPath = [];
+            currentFunctionality = allFunctionalities[Math.floor(Math.random() * allFunctionalities.length)];
+            document.getElementById('targetDisplay').style.display = 'block';
+            document.getElementById('targetName').textContent = currentFunctionality.split('/').pop();
+            updateDisplay();
+            startTime = Date.now();
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 100);
+        }
 
         // Fonction pour terminer un test
         function endCurrentTest(found) {
@@ -940,12 +994,22 @@ function nextFunctionality() {
                 <p><strong>Temps moyen :</strong> ${avgTime.toFixed(2)}s</p>
                 <p><strong>Clics totaux :</strong> ${totalClicks}</p>
                 <p><strong>Clics moyens :</strong> ${avgClicks.toFixed(1)}</p>
+                <div style="margin-top: 20px; padding: 15px; background-color: #e8f5e9; border-radius: 8px; color: #2e7d32; font-weight: bold;">
+                    L'expérience est finie. Merci pour votre participation.<br>
+                    Vous pouvez fermer la page après avoir téléchargé les résultats.
+                </div>
             `;
             document.getElementById('resultsModal').classList.add('active');
         }
 
         // Fonction pour télécharger les résultats
         function downloadResults() {
+            // Group results by tree
+            const groupedResults = {};
+            treesOrder.forEach(treeId => {
+                groupedResults[treeId] = results.filter(r => r.tree == treeId);
+            });
+
             const data = {
                 session_metadata: {
                     season: selectedSeason,
@@ -959,9 +1023,9 @@ function nextFunctionality() {
                     session_start: results[0].timestamp,
                     session_end: new Date().toISOString()
                 },
-                results: results
+                results_by_tree: groupedResults
             };
-            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -1009,7 +1073,7 @@ function nextFunctionality() {
                         if (testStarted) {
                             clickCount++;
                             updateDisplay();
-                            clickedPath.push({type: 'open', path: currentPath, timestamp: Date.now()});
+                            clickedPath.push({ type: 'open', path: currentPath, timestamp: Date.now() });
                         }
 
                         const isOpen = childContainer.style.display === 'block';
@@ -1037,7 +1101,7 @@ function nextFunctionality() {
 
             clickCount++;
             updateDisplay();
-            clickedPath.push({type: 'click', path: path, timestamp: Date.now()});
+            clickedPath.push({ type: 'click', path: path, timestamp: Date.now() });
 
             if (path === currentFunctionality) {
                 element.classList.add('correct');
@@ -1063,4 +1127,5 @@ function nextFunctionality() {
         }
     </script>
 </body>
+
 </html>
