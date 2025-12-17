@@ -876,7 +876,7 @@
             allFunctionalities = getAllFunctionalities(trees[selectedTree]);
             renderTree(trees[selectedTree]);
             document.getElementById('targetDisplay').style.display = 'none';
-            document.getElementById('startBtn').disabled = false;
+            document.getElementById('startBtn').disabled = true;
             document.getElementById('startBtn').textContent = `Démarrer l'arborescence ${selectedTree}`;
             document.getElementById('startBtn').onclick = () => {
                 document.getElementById('startBtn').disabled = true;
