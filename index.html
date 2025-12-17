@@ -374,82 +374,419 @@
         let results = [];
         let timerInterval = null;
 
-        // Arborescences
+                // Arborescences
         const trees = {
             1: {
-                "1. Génération & Sources de Données": {
-                    "Générateurs de Signaux Audio": {
-                        "Click": null,
-                        "Noises": {"Brownian": null, "White": null},
-                        "Oscillators": {"SineWave": null, "Square": null, "SawTooth": null}
+                "Null": null,
+                "Custom": null,
+                "Pass": null,
+                "Console Log": null,
+                "Arrays": {
+                    "Get component": null,
+                    "Length": null,
+                    "Serve slice": null
+                },
+                "Channels": {
+                    "Mono to all channels": null,
+                    "Several to Mono": null,
+                    "Two to Stereo": null
+                },
+                "Conversions": {
+                    "Degrees to radian": null,
+                    "MIDI to Frequency": null,
+                    "Radian to degrees": null,
+                    "Str to ASCII": null
+                },
+                "Envelopes": {
+                    "ADSR": null,
+                    "Fade In": null,
+                    "Fade Out": null
+                },
+                "Generators": {
+                    "Click": null,
+                    "Noises": {
+                        "Brownian": null,
+                        "White": null
                     },
-                    "Générateurs de Courbes de Contrôle": {
-                        "Envelopes": {"ADSR": null, "Fade In": null, "Fade Out": null}
+                    "Oscillators": {
+                        "CosineWave": null,
+                        "Modulate Sine": null,
+                        "SawTooth": null,
+                        "SineWave": null,
+                        "Square": null,
+                        "TanWave": null,
+                        "Triangle": null
                     }
+                },
+                "Inputs": {
+                    "Files": {
+                        "Load Audio": null,
+                        "Load CSV": null,
+                        "Load Image": null,
+                        "Load TXT": null,
+                        "Load XLSX": null
+                    },
+                    "Parameters": {
+                        "Number": null,
+                        "Range": null,
+                        "Text": null
+                    },
+                    "Sockets": {
+                        "HTTP Text": null,
+                        "HTTP Audio": null,
+                        "TCP": null,
+                        "UDP": null
+                    }
+                },
+                "Logic": {
+                    "If-then-else": null,
+                    "HigherThan": null,
+                    "≥": null,
+                    "LowerThan": null,
+                    "≤": null,
+                    "=": null,
+                    "≠": null,
+                    "and": null,
+                    "or": null,
+                    "not": null
+                },
+                "Mappings": {
+                    "Linear": null
+                },
+                "Math": {
+                    "Arithmetics": {
+                        "+": null,
+                        "-": null,
+                        "×": null,
+                        "÷": null,
+                        "Abs": null,
+                        "Ceil": null,
+                        "Floor": null,
+                        "Power": null,
+                        "Round": null,
+                        "Sign": null,
+                        "Sqrt": null
+                    },
+                    "Trigonometry": {
+                        "Acos": null,
+                        "Asin": null,
+                        "Atan": null,
+                        "Atan2": null,
+                        "Cos": null,
+                        "Sin": null,
+                        "Tan": null
+                    }
+                },
+                "Parsers": {
+                    "parse Float": null,
+                    "parse Int": null,
+                    "parse JSON": null,
+                    "parse OSC": null
+                },
+                "Playback": {
+                    "Diff ? + retain": null,
+                    "Retain Max": null,
+                    "Retain Min": null,
+                    "Retain Value": null,
+                    "Smooth": null,
+                    "Speed Multiplier": null
+                },
+                "Sockets": {
+                    "HTTP Text": null,
+                    "HTTP Audio": null,
+                    "TCP": null,
+                    "UDP": null
                 }
             },
             2: {
-                "2. Transformation & Traitement": {
-                    "Traitement Mathématique & Mapping": {
-                        "Arithmetics": {"+": null, "-": null, "×": null, "÷": null},
-                        "Trigonometry": {"Sin": null, "Cos": null, "Tan": null}
+                "1. Sources et Entrées": {
+                    "Générateurs de signaux": {
+                        "Click": null,
+                        "Noises": {
+                            "Brownian": null,
+                            "White": null
+                        },
+                        "Oscillators": {
+                            "CosineWave": null,
+                            "Modulate Sine": null,
+                            "SawTooth": null,
+                            "SineWave": null,
+                            "Square": null,
+                            "TanWave": null,
+                            "Triangle": null
+                        }
+                    },
+                    "Entrées de données": {
+                        "Files": {
+                            "Load Audio": null,
+                            "Load CSV": null,
+                            "Load Image": null,
+                            "Load TXT": null,
+                            "Load XLSX": null
+                        },
+                        "Parameters": {
+                            "Number": null,
+                            "Range": null,
+                            "Text": null
+                        },
+                        "Sockets": {
+                            "HTTP Text": null,
+                            "HTTP Audio": null,
+                            "TCP": null,
+                            "UDP": null
+                        }
+                    }
+                },
+                "2. Traitement de Données": {
+                    "Opérations Mathématiques": {
+                        "Arithmetics": {
+                            "+": null,
+                            "-": null,
+                            "×": null,
+                            "÷": null,
+                            "Abs": null,
+                            "Ceil": null,
+                            "Floor": null,
+                            "Round": null,
+                            "Sign": null
+                        },
+                        "Trigonometry": {
+                            "Acos": null,
+                            "Asin": null,
+                            "Atan": null,
+                            "Atan2": null,
+                            "Cos": null,
+                            "Sin": null,
+                            "Tan": null
+                        }
+                    },
+                    "Mappages et Conversions": {
+                        "Mappings": {
+                            "Linear": null
+                        },
+                        "Conversions": {
+                            "Degrees to radian": null,
+                            "MIDI to Frequency": null,
+                            "Radian to degrees": null,
+                            "Str to ASCII": null
+                        }
+                    }
+                },
+                "3. Traitement et Routage Audio": {
+                    "Forme du signal": {
+                        "ADSR": null,
+                        "Fade In": null,
+                        "Fade Out": null
+                    },
+                    "Channels": {
+                        "Mono to all channels": null,
+                        "Several to Mono": null,
+                        "Two to Stereo": null
+                    },
+                    "Contrôle de Lecture": {
+                        "Playback": {
+                            "Diff": null,
+                            "Retain Max": null,
+                            "Retain Min": null,
+                            "Retain Value": null,
+                            "Smooth": null,
+                            "Speed": null
+                        }
+                    }
+                },
+                "4. Logique et Contrôle de Flux": {
+                    "Opérateurs Logiques": {
+                        "If-then-else": null,
+                        "HigherThan": null,
+                        "≥": null,
+                        "LowerThan": null,
+                        "≤": null,
+                        "=": null,
+                        "≠": null,
+                        "and": null,
+                        "or": null,
+                        "not": null
+                    }
+                },
+                "5. Utilitaires et Structures de Données": {
+                    "Gestion des Tableaux": {
+                        "Arrays": {
+                            "Get component": null,
+                            "Length": null,
+                            "Serve slice": null
+                        }
+                    },
+                    "Analyse": {
+                        "Parsers": {
+                            "parse Float": null,
+                            "parse Int": null,
+                            "parse JSON": null,
+                            "parse OSC": null
+                        }
+                    },
+                    "Général": {
+                        "Null": null,
+                        "Custom": null,
+                        "Pass": null,
+                        "Console Log": null
                     }
                 }
             },
             3: {
-                "1. Sources et Entrées": {
-                    "Générateurs de signaux": {
+                "1. Génération & Sources de Données": {
+                    "Générateurs de Signaux Audio": {
                         "Click": null,
-                        "Noises": {"Brownian": null, "White": null},
-                        "Oscillators": {"SineWave": null, "Square": null}
+                        "Noises": {
+                            "Brownian": null,
+                            "White": null
+                        },
+                        "Oscillators": {
+                            "SineWave": null,
+                            "Square": null,
+                            "SawTooth": null
+                        }
+                    },
+                    "Générateurs de Courbes de Contrôle": {
+                        "Envelopes": {
+                            "ADSR": null,
+                            "Fade In": null,
+                            "Fade Out": null
+                        }
+                    },
+                    "Sources de Données Externes": {
+                        "Files": {
+                            "Load Audio": null,
+                            "Load CSV": null,
+                            "Load TXT": null,
+                            "Load XLSX": null,
+                            "Load Image": null
+                        },
+                        "Sockets": {
+                            "HTTP Text": null,
+                            "HTTP Audio": null,
+                            "TCP": null,
+                            "UDP": null
+                        }
+                    },
+                    "Entrées Utilisateur": {
+                        "Parameters": {
+                            "Number": null,
+                            "Range": null,
+                            "Text": null
+                        }
+                    }
+                },
+                "2. Transformation & Traitement": {
+                    "Traitement Mathématique & Mapping": {
+                        "Arithmetics": {
+                            "+": null,
+                            "-": null,
+                            "×": null,
+                            "÷": null,
+                            "Abs": null,
+                            "Floor": null
+                        },
+                        "Trigonometry": {
+                            "Sin": null,
+                            "Cos": null,
+                            "Tan": null
+                        },
+                        "Mappings": {
+                            "Linear": null
+                        }
+                    },
+                    "Conversions de Format": {
+                        "Degrees to radian": null,
+                        "Radian to degrees": null,
+                        "MIDI to Frequency": null,
+                        "Str to ASCII": null,
+                        "Parsers": {
+                            "parse JSON": null,
+                            "parse OSC": null
+                        }
+                    },
+                    "Traitement du Signal Temporel": {
+                        "Playback": {
+                            "Smooth": null,
+                            "Speed": null,
+                            "Diff": null
+                        },
+                        "Envelopes": {
+                            "ADSR": null,
+                            "Fade In": null,
+                            "Fade Out": null
+                        }
+                    },
+                    "Manipulation de Canaux Audio": {
+                        "Channels": {
+                            "Mono to all channels": null,
+                            "Two to Stereo": null
+                        }
+                    }
+                },
+                "3. Contrôle & Logique": {
+                    "Opérateurs Conditionnels": {
+                        "If-then-else": null
+                    },
+                    "Comparateurs": {
+                        "HigherThan": null,
+                        "≥": null,
+                        "LowerThan": null,
+                        "≤": null,
+                        "=": null,
+                        "≠": null
+                    },
+                    "Opérateurs Booléens": {
+                        "and": null,
+                        "or": null,
+                        "not": null
+                    }
+                },
+                "4. Entrées & Sorties (I/O)": {
+                    "Communication Réseau": {
+                        "Sockets": {
+                            "HTTP Text": null,
+                            "HTTP Audio": null,
+                            "TCP": null,
+                            "UDP": null
+                        }
+                    },
+                    "Interaction avec le Système de Fichiers": {
+                        "Files": {
+                            "Load Audio": null,
+                            "Load CSV": null,
+                            "Load Image": null,
+                            "Load TXT": null,
+                            "Load XLSX": null
+                        }
+                    },
+                    "Débogage & Visualisation": {
+                        "Console Log": null
+                    }
+                },
+                "5. Analyse & Utilitaires": {
+                    "Manipulation de Listes (Arrays)": {
+                        "Arrays": {
+                            "Get component": null,
+                            "Length": null,
+                            "Serve slice": null
+                        }
+                    },
+                    "Analyse de Données (Parsing)": {
+                        "Parsers": {
+                            "parse Float": null,
+                            "parse Int": null,
+                            "parse JSON": null,
+                            "parse OSC": null
+                        }
+                    },
+                    "Utilitaires de Patching": {
+                        "Null": null,
+                        "Custom": null,
+                        "Pass": null
                     }
                 }
-            },
-            4: {
-                "Générateur de signaux": {
-                    "Sources": {
-                        "Brownian": null, "White": null, "Square": null, "SineWave": null,
-                        "CosineWave": null, "Triangle": null, "SawTooth": null, "TanWave": null
-                    },
-                    "Génération d'enveloppe": {"ADSR": null, "Fade In": null, "Fade Out": null}
-                },
-                "Fonctions trigonométriques": {
-                    "Atan": null, "Cos": null, "Atan2": null, "Asin": null,
-                    "Acos": null, "Sin": null, "Tan": null
-                },
-                "Fonctions mathématiques": {
-                    "Ceil": null, "Floor": null, "Round": null, "Power": null,
-                    "Abs": null, "Sign": null, "SQRT": null, "Linear": null
-                },
-                "Opérateurs logiques et mathématiques": {
-                    "=": null, ">=": null, "!=": null, "HigherThan": null,
-                    "LowerThan": null, "+": null, "*": null, "-": null,
-                    "/": null, "and": null, "not": null, "or": null
-                },
-                "Programming": {
-                    "Pass": null, "Console Log": null, "if-then-else": null, "Custom": null
-                },
-                "IHM": {"click": null, "Text": null, "Range": null, "Number": null},
-                "Input Data": {
-                    "Web Search": {"HTTP Text": null, "HTTP Audio": null},
-                    "Input Files": {"Load Text": null, "Load CSV": null, "Load XLSX": null, "Load Image": null}
-                },
-                "Configuration Audio Output": {
-                    "Text to Stereo": null, "Mono to all Channels": null, "Several to mono": null
-                },
-                "Protocole de communication": {"TCP": null, "UDP": null},
-                "Signal processing": {"Retain Values": null, "Smooth": null, "Modular Sine": null},
-                "Fonctions sur listes": {
-                    "Serve Slice": null, "Diff ?+ retain": null, "Length": null,
-                    "Retain Min": null, "Retain Max": null, "Get Component": null
-                },
-                "Conversions": {
-                    "Str to ASCII": null, "Radian to Degrees": null, "Degrees to Radian": null,
-                    "MID to frequency": null,
-                    "Parse": {"Parse Float": null, "Parse Int": null, "Parse JSON": null, "Parse OSC": null}
-                }
-            }
-        };
+            };
 
         function selectTree(treeNum) {
             selectedTree = treeNum;
