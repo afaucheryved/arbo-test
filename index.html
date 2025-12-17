@@ -332,10 +332,10 @@
             <h2>Choix de l'arborescence</h2>
             <p>Quelle arborescence souhaitez-vous tester ?</p>
             <div class="modal-buttons">
-                <button class="btn-1" onclick="selectTree(1)">1. Génération & Sources</button>
-                <button class="btn-2" onclick="selectTree(2)">2. Transformation</button>
-                <button class="btn-3" onclick="selectTree(3)">3. Sources et Entrées</button>
-                <button class="btn-4" onclick="selectTree(4)">4. Arbo du SCRIM</button>
+                <button class="btn-1" onclick="selectTree(1)">1. Arbo primaire</button>
+                <button class="btn-2" onclick="selectTree(2)">2. Arbo secondaire</button>
+                <button class="btn-3" onclick="selectTree(3)">3. 2eme arbo secondaire</button>
+                <button class="btn-4" onclick="selectTree(4)">4. Arbo du SCRIME</button>
             </div>
         </div>
     </div>
@@ -374,7 +374,7 @@
         let results = [];
         let timerInterval = null;
 
-                // Arborescences
+        // Arborescences
         const trees = {
             1: {
                 "Null": null,
@@ -786,7 +786,52 @@
                         "Pass": null
                     }
                 }
-            };
+            },
+            4: {
+                "Générateur de signaux": {
+                    "Sources": {
+                        "Brownian": null, "White": null, "Square": null, "SineWave": null,
+                        "CosineWave": null, "Triangle": null, "SawTooth": null, "TanWave": null
+                    },
+                    "Génération d'enveloppe": {"ADSR": null, "Fade In": null, "Fade Out": null}
+                },
+                "Fonctions trigonométriques": {
+                    "Atan": null, "Cos": null, "Atan2": null, "Asin": null,
+                    "Acos": null, "Sin": null, "Tan": null
+                },
+                "Fonctions mathématiques": {
+                    "Ceil": null, "Floor": null, "Round": null, "Power": null,
+                    "Abs": null, "Sign": null, "SQRT": null, "Linear": null
+                },
+                "Opérateurs logiques et mathématiques": {
+                    "=": null, ">=": null, "!=": null, "HigherThan": null,
+                    "LowerThan": null, "+": null, "*": null, "-": null,
+                    "/": null, "and": null, "not": null, "or": null
+                },
+                "Programming": {
+                    "Pass": null, "Console Log": null, "if-then-else": null, "Custom": null
+                },
+                "IHM": {"click": null, "Text": null, "Range": null, "Number": null},
+                "Input Data": {
+                    "Web Search": {"HTTP Text": null, "HTTP Audio": null},
+                    "Input Files": {"Load Text": null, "Load CSV": null, "Load XLSX": null, "Load Image": null}
+                },
+                "Configuration Audio Output": {
+                    "Text to Stereo": null, "Mono to all Channels": null, "Several to mono": null
+                },
+                "Protocole de communication": {"TCP": null, "UDP": null},
+                "Signal processing": {"Retain Values": null, "Smooth": null, "Modular Sine": null},
+                "Fonctions sur listes": {
+                    "Serve Slice": null, "Diff ?+ retain": null, "Length": null,
+                    "Retain Min": null, "Retain Max": null, "Get Component": null
+                },
+                "Conversions": {
+                    "Str to ASCII": null, "Radian to Degrees": null, "Degrees to Radian": null,
+                    "MID to frequency": null,
+                    "Parse": {"Parse Float": null, "Parse Int": null, "Parse JSON": null, "Parse OSC": null}
+                }
+            }
+        };
 
         function selectTree(treeNum) {
             selectedTree = treeNum;
@@ -874,8 +919,8 @@
 
         document.getElementById('startBtn').onclick = () => {
             document.getElementById('numTestsModal').classList.add('active');
-            document.getElementById('numTestsInput').max = allFunctionalities.length;
-        };
+            document.getElementById('numTestsInput').
+                };
 
         function startTests() {
             totalTests = parseInt(document.getElementById('numTestsInput').value);
