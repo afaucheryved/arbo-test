@@ -867,42 +867,44 @@
         }
 
         // Fonction pour démarrer les tests de l'arborescence suivante
-        function startNextTreeTests() {
-            if (currentTreeIndex >= treesOrder.length) {
-                finishAllTests();
-                return;
-            }
-            selectedTree = treesOrder[currentTreeIndex];
-            allFunctionalities = getAllFunctionalities(trees[selectedTree]);
-            renderTree(trees[selectedTree]);
-            document.getElementById('targetDisplay').style.display = 'none';
-            document.getElementById('startBtn').disabled = true;
-            document.getElementById('startBtn').textContent = `Démarrer l'arborescence ${selectedTree}`;
-            document.getElementById('startBtn').onclick = () => {
-                document.getElementById('startBtn').disabled = true;
-                nextFunctionality();
-            };
-        }
+function startNextTreeTests() {
+    if (currentTreeIndex >= treesOrder.length) {
+        finishAllTests();
+        return;
+    }
+    selectedTree = treesOrder[currentTreeIndex];
+    allFunctionalities = getAllFunctionalities(trees[selectedTree]);
+    renderTree(trees[selectedTree]);
+    document.getElementById('targetDisplay').style.display = 'none';
+    document.getElementById('startBtn').disabled = false;
+    document.getElementById('startBtn').textContent = `Démarrer l'arborescence ${selectedTree}`;
+    document.getElementById('startBtn').onclick = () => {
+        document.getElementById('startBtn').disabled = true;
+        nextFunctionality();
+    };
+}
 
-        // Fonction pour passer à la fonctionnalité suivante
-        function nextFunctionality() {
-            if (currentTest >= totalTests) {
-                currentTreeIndex++;
-                currentTest = 0;
-                startNextTreeTests();
-                return;
-            }
-            currentTest++;
-            clickCount = 0;
-            clickedPath = [];
-            currentFunctionality = allFunctionalities[Math.floor(Math.random() * allFunctionalities.length)];
-            document.getElementById('targetDisplay').style.display = 'block';
-            document.getElementById('targetName').textContent = currentFunctionality.split('/').pop();
-            updateDisplay();
-            startTime = Date.now();
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(updateTimer, 100);
-        }
+// Fonction pour passer à la fonctionnalité suivante
+function nextFunctionality() {
+    if (currentTest >= totalTests) {
+        currentTreeIndex++;
+        currentTest = 0;
+        document.getElementById('startBtn').disabled = false; // Réactive le bouton
+        startNextTreeTests();
+        return;
+    }
+    currentTest++;
+    clickCount = 0;
+    clickedPath = [];
+    currentFunctionality = allFunctionalities[Math.floor(Math.random() * allFunctionalities.length)];
+    document.getElementById('targetDisplay').style.display = 'block';
+    document.getElementById('targetName').textContent = currentFunctionality.split('/').pop();
+    updateDisplay();
+    startTime = Date.now();
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(updateTimer, 100);
+}
+
 
         // Fonction pour terminer un test
         function endCurrentTest(found) {
