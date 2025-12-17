@@ -393,8 +393,10 @@ function selectSeason(season) {
     selectedSeason = season;
     treesOrder = seasons[season];
     document.getElementById('seasonModal').classList.remove('active');
-    document.getElementById('choiceModal').classList.add('active');
+    document.getElementById('numTestsModal').classList.add('active');
 }
+
+
 
 // Fonction pour sélectionner une arborescence (modifiée)
 function selectTree(treeNum) {
@@ -409,6 +411,13 @@ function startTests() {
         alert('Nombre invalide !');
         return;
     }
+    document.getElementById('numTestsModal').classList.remove('active');
+    testStarted = true;
+    currentTest = 0;
+    results = [];
+    currentTreeIndex = 0;
+    startNextTreeTests();
+}
     document.getElementById('numTestsModal').classList.remove('active');
     testStarted = true;
     currentTest = 0;
@@ -517,13 +526,6 @@ function downloadResults() {
     a.download = `test_results_${selectedSeason}_${new Date().toISOString().split('T')[0]}.json`;
     a.click();
 }
-
-// Fonctions existantes (inchangées)
-function getAllFunctionalities(tree, path = "") { ... }
-function renderTree(tree, container = document.getElementById('treeContainer'), path = "") { ... }
-function handleLeafClick(path, element) { ... }
-function updateTimer() { ... }
-function updateDisplay() { ... }
         
         // Arborescences
         const trees = {
