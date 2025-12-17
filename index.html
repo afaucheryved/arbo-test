@@ -378,156 +378,7 @@ let results = [];
 let timerInterval = null;
 
 // Arborescences (inchangé)
-const trees = { ... }; // (garde ton objet trees existant)
-
-// Définition des ordres de saison
-const seasons = {
-    hiver: [1, 2, 4],
-    printemps: [4, 3, 1],
-    ete: [1, 3, 4],
-    automne: [4, 2, 1]
-};
-
-// Fonction pour sélectionner une saison
-function selectSeason(season) {
-    selectedSeason = season;
-    treesOrder = seasons[season];
-    document.getElementById('seasonModal').classList.remove('active');
-    document.getElementById('numTestsModal').classList.add('active');
-}
-
-
-
-// Fonction pour sélectionner une arborescence (modifiée)
-function selectTree(treeNum) {
-    document.getElementById('choiceModal').classList.remove('active');
-    document.getElementById('numTestsModal').classList.add('active');
-}
-
-// Fonction pour démarrer les tests (modifiée)
-function startTests() {
-    totalTests = parseInt(document.getElementById('numTestsInput').value);
-    if (totalTests < 1) {
-        alert('Nombre invalide !');
-        return;
-    }
-    document.getElementById('numTestsModal').classList.remove('active');
-    testStarted = true;
-    currentTest = 0;
-    results = [];
-    currentTreeIndex = 0;
-    startNextTreeTests();
-}
-    document.getElementById('numTestsModal').classList.remove('active');
-    testStarted = true;
-    currentTest = 0;
-    results = [];
-    currentTreeIndex = 0;
-    startNextTreeTests();
-}
-
-// Fonction pour démarrer les tests de l'arborescence suivante
-function startNextTreeTests() {
-    if (currentTreeIndex >= treesOrder.length) {
-        finishAllTests();
-        return;
-    }
-    selectedTree = treesOrder[currentTreeIndex];
-    allFunctionalities = getAllFunctionalities(trees[selectedTree]);
-    renderTree(trees[selectedTree]);
-    document.getElementById('targetDisplay').style.display = 'none';
-    document.getElementById('startBtn').disabled = false;
-    document.getElementById('startBtn').textContent = `Démarrer l'arborescence ${selectedTree}`;
-    document.getElementById('startBtn').onclick = () => {
-        document.getElementById('startBtn').disabled = true;
-        nextFunctionality();
-    };
-}
-
-// Fonction pour passer à la fonctionnalité suivante (modifiée)
-function nextFunctionality() {
-    if (currentTest >= totalTests) {
-        currentTreeIndex++;
-        currentTest = 0;
-        startNextTreeTests();
-        return;
-    }
-    currentTest++;
-    clickCount = 0;
-    clickedPath = [];
-    currentFunctionality = allFunctionalities[Math.floor(Math.random() * allFunctionalities.length)];
-    document.getElementById('targetDisplay').style.display = 'block';
-    document.getElementById('targetName').textContent = currentFunctionality.split('/').pop();
-    updateDisplay();
-    startTime = Date.now();
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = setInterval(updateTimer, 100);
-}
-
-// Fonction pour terminer un test (modifiée)
-function endCurrentTest(found) {
-    clearInterval(timerInterval);
-    const duration = (Date.now() - startTime) / 1000;
-    results.push({
-        test_number: currentTest,
-        tree: selectedTree,
-        functionality: currentFunctionality,
-        functionality_name: currentFunctionality.split('/').pop(),
-        found: found,
-        duration_seconds: Math.round(duration * 100) / 100,
-        click_count: clickCount,
-        path_taken: clickedPath,
-        timestamp: new Date().toISOString()
-    });
-    setTimeout(nextFunctionality, 1000);
-}
-
-// Fonction pour terminer tous les tests (modifiée)
-function finishAllTests() {
-    testStarted = false;
-    clearInterval(timerInterval);
-    const totalTime = results.reduce((sum, r) => sum + r.duration_seconds, 0);
-    const avgTime = totalTime / results.length;
-    const totalClicks = results.reduce((sum, r) => sum + r.click_count, 0);
-    const avgClicks = totalClicks / results.length;
-    document.getElementById('resultStats').innerHTML = `
-        <p><strong>Saison :</strong> ${selectedSeason}</p>
-        <p><strong>Arborescences testées :</strong> ${treesOrder.join(' → ')}</p>
-        <p><strong>Tests par arborescence :</strong> ${totalTests}</p>
-        <p><strong>Temps total :</strong> ${totalTime.toFixed(2)}s</p>
-        <p><strong>Temps moyen :</strong> ${avgTime.toFixed(2)}s</p>
-        <p><strong>Clics totaux :</strong> ${totalClicks}</p>
-        <p><strong>Clics moyens :</strong> ${avgClicks.toFixed(1)}</p>
-    `;
-    document.getElementById('resultsModal').classList.add('active');
-}
-
-// Fonction pour télécharger les résultats (modifiée)
-function downloadResults() {
-    const data = {
-        session_metadata: {
-            season: selectedSeason,
-            trees_order: treesOrder,
-            tests_per_tree: totalTests,
-            total_tests: results.length,
-            total_time_seconds: results.reduce((sum, r) => sum + r.duration_seconds, 0),
-            average_time_seconds: results.reduce((sum, r) => sum + r.duration_seconds, 0) / results.length,
-            total_clicks: results.reduce((sum, r) => sum + r.click_count, 0),
-            average_clicks: results.reduce((sum, r) => sum + r.click_count, 0) / results.length,
-            session_start: results[0].timestamp,
-            session_end: new Date().toISOString()
-        },
-        results: results
-    };
-    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `test_results_${selectedSeason}_${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
-}
-        
-        // Arborescences
+// Arborescences
         const trees = {
             1: {
                 "Null": null,
@@ -986,200 +837,226 @@ function downloadResults() {
             }
         };
 
-        function selectTree(treeNum) {
-            selectedTree = treeNum;
-            document.getElementById('choiceModal').classList.remove('active');
-            allFunctionalities = getAllFunctionalities(trees[treeNum]);
-            renderTree(trees[treeNum]);
-        }
+// Définition des ordres de saison
+const seasons = {
+    hiver: [1, 2, 4],
+    printemps: [4, 3, 1],
+    ete: [1, 3, 4],
+    automne: [4, 2, 1]
+};
 
-        function getAllFunctionalities(tree, path = "") {
-            let funcs = [];
-            for (let [key, value] of Object.entries(tree)) {
-                const currentPath = path ? `${path}/${key}` : key;
-                if (value === null) {
-                    funcs.push(currentPath);
-                } else {
-                    funcs = funcs.concat(getAllFunctionalities(value, currentPath));
+// Fonction pour sélectionner une saison
+function selectSeason(season) {
+    selectedSeason = season;
+    treesOrder = seasons[season];
+    document.getElementById('seasonModal').classList.remove('active');
+    document.getElementById('numTestsModal').classList.add('active');
+}
+
+// Fonction pour démarrer les tests
+function startTests() {
+    totalTests = parseInt(document.getElementById('numTestsInput').value);
+    if (totalTests < 1) {
+        alert('Nombre invalide !');
+        return;
+    }
+    document.getElementById('numTestsModal').classList.remove('active');
+    testStarted = true;
+    currentTest = 0;
+    results = [];
+    currentTreeIndex = 0;
+    startNextTreeTests();
+}
+
+// Fonction pour démarrer les tests de l'arborescence suivante
+function startNextTreeTests() {
+    if (currentTreeIndex >= treesOrder.length) {
+        finishAllTests();
+        return;
+    }
+    selectedTree = treesOrder[currentTreeIndex];
+    allFunctionalities = getAllFunctionalities(trees[selectedTree]);
+    renderTree(trees[selectedTree]);
+    document.getElementById('targetDisplay').style.display = 'none';
+    document.getElementById('startBtn').disabled = false;
+    document.getElementById('startBtn').textContent = `Démarrer l'arborescence ${selectedTree}`;
+    document.getElementById('startBtn').onclick = () => {
+        document.getElementById('startBtn').disabled = true;
+        nextFunctionality();
+    };
+}
+
+// Fonction pour passer à la fonctionnalité suivante
+function nextFunctionality() {
+    if (currentTest >= totalTests) {
+        currentTreeIndex++;
+        currentTest = 0;
+        startNextTreeTests();
+        return;
+    }
+    currentTest++;
+    clickCount = 0;
+    clickedPath = [];
+    currentFunctionality = allFunctionalities[Math.floor(Math.random() * allFunctionalities.length)];
+    document.getElementById('targetDisplay').style.display = 'block';
+    document.getElementById('targetName').textContent = currentFunctionality.split('/').pop();
+    updateDisplay();
+    startTime = Date.now();
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(updateTimer, 100);
+}
+
+// Fonction pour terminer un test
+function endCurrentTest(found) {
+    clearInterval(timerInterval);
+    const duration = (Date.now() - startTime) / 1000;
+    results.push({
+        test_number: currentTest,
+        tree: selectedTree,
+        functionality: currentFunctionality,
+        functionality_name: currentFunctionality.split('/').pop(),
+        found: found,
+        duration_seconds: Math.round(duration * 100) / 100,
+        click_count: clickCount,
+        path_taken: clickedPath,
+        timestamp: new Date().toISOString()
+    });
+    setTimeout(nextFunctionality, 1000);
+}
+
+// Fonction pour terminer tous les tests
+function finishAllTests() {
+    testStarted = false;
+    clearInterval(timerInterval);
+    const totalTime = results.reduce((sum, r) => sum + r.duration_seconds, 0);
+    const avgTime = totalTime / results.length;
+    const totalClicks = results.reduce((sum, r) => sum + r.click_count, 0);
+    const avgClicks = totalClicks / results.length;
+    document.getElementById('resultStats').innerHTML = `
+        <p><strong>Saison :</strong> ${selectedSeason}</p>
+        <p><strong>Arborescences testées :</strong> ${treesOrder.join(' → ')}</p>
+        <p><strong>Tests par arborescence :</strong> ${totalTests}</p>
+        <p><strong>Temps total :</strong> ${totalTime.toFixed(2)}s</p>
+        <p><strong>Temps moyen :</strong> ${avgTime.toFixed(2)}s</p>
+        <p><strong>Clics totaux :</strong> ${totalClicks}</p>
+        <p><strong>Clics moyens :</strong> ${avgClicks.toFixed(1)}</p>
+    `;
+    document.getElementById('resultsModal').classList.add('active');
+}
+
+// Fonction pour télécharger les résultats
+function downloadResults() {
+    const data = {
+        session_metadata: {
+            season: selectedSeason,
+            trees_order: treesOrder,
+            tests_per_tree: totalTests,
+            total_tests: results.length,
+            total_time_seconds: results.reduce((sum, r) => sum + r.duration_seconds, 0),
+            average_time_seconds: results.reduce((sum, r) => sum + r.duration_seconds, 0) / results.length,
+            total_clicks: results.reduce((sum, r) => sum + r.click_count, 0),
+            average_clicks: results.reduce((sum, r) => sum + r.click_count, 0) / results.length,
+            session_start: results[0].timestamp,
+            session_end: new Date().toISOString()
+        },
+        results: results
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `test_results_${selectedSeason}_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+}
+
+// Fonctions utilitaires
+function getAllFunctionalities(tree, path = "") {
+    let funcs = [];
+    for (let [key, value] of Object.entries(tree)) {
+        const currentPath = path ? `${path}/${key}` : key;
+        if (value === null) {
+            funcs.push(currentPath);
+        } else {
+            funcs = funcs.concat(getAllFunctionalities(value, currentPath));
+        }
+    }
+    return funcs;
+}
+
+function renderTree(tree, container = document.getElementById('treeContainer'), path = "") {
+    container.innerHTML = '';
+    for (let [key, value] of Object.entries(tree)) {
+        const currentPath = path ? `${path}/${key}` : key;
+        const div = document.createElement('div');
+        div.className = 'tree-node';
+
+        const item = document.createElement('div');
+        item.className = value === null ? 'tree-item leaf' : 'tree-item parent';
+        item.dataset.path = currentPath;
+
+        if (value !== null) {
+            const icon = document.createElement('span');
+            icon.className = 'toggle-icon';
+            icon.textContent = '▶';
+            item.appendChild(icon);
+
+            const childContainer = document.createElement('div');
+            childContainer.style.display = 'none';
+            childContainer.className = 'tree-node';
+
+            item.onclick = () => {
+                if (testStarted) {
+                    clickCount++;
+                    updateDisplay();
+                    clickedPath.push({type: 'open', path: currentPath, timestamp: Date.now()});
                 }
-            }
-            return funcs;
-        }
 
-        function renderTree(tree, container = document.getElementById('treeContainer'), path = "") {
-            container.innerHTML = '';
-            for (let [key, value] of Object.entries(tree)) {
-                const currentPath = path ? `${path}/${key}` : key;
-                const div = document.createElement('div');
-                div.className = 'tree-node';
-                
-                const item = document.createElement('div');
-                item.className = value === null ? 'tree-item leaf' : 'tree-item parent';
-                item.dataset.path = currentPath;
-                
-                if (value !== null) {
-                    const icon = document.createElement('span');
-                    icon.className = 'toggle-icon';
-                    icon.textContent = '▶';
-                    item.appendChild(icon);
-                    
-                    const childContainer = document.createElement('div');
-                    childContainer.style.display = 'none';
-                    childContainer.className = 'tree-node';
-                    
-                    item.onclick = () => {
-                        if (testStarted) {
-                            clickCount++;
-                            updateDisplay();
-                            clickedPath.push({type: 'open', path: currentPath, timestamp: Date.now()});
-                        }
-                        
-                        const isOpen = childContainer.style.display === 'block';
-                        childContainer.style.display = isOpen ? 'none' : 'block';
-                        icon.textContent = isOpen ? '▶' : '▼';
-                    };
-                    
-                    renderTree(value, childContainer, currentPath);
-                    div.appendChild(item);
-                    div.appendChild(childContainer);
-                } else {
-                    item.onclick = () => handleLeafClick(currentPath, item);
-                    div.appendChild(item);
-                }
-                
-                const text = document.createTextNode(key);
-                item.appendChild(text);
-                container.appendChild(div);
-            }
-        }
-
-        function handleLeafClick(path, element) {
-            if (!testStarted) return;
-            
-            clickCount++;
-            updateDisplay();
-            clickedPath.push({type: 'click', path: path, timestamp: Date.now()});
-            
-            if (path === currentFunctionality) {
-                element.classList.add('correct');
-                setTimeout(() => endCurrentTest(true), 500);
-            } else {
-                element.classList.add('wrong');
-                setTimeout(() => element.classList.remove('wrong'), 500);
-                alert(`Mauvaise fonctionnalité!\nVous avez sélectionné "${path.split('/').pop()}" au lieu de "${currentFunctionality.split('/').pop()}"`);
-            }
-        }
-
-        document.getElementById('startBtn').onclick = () => {
-            document.getElementById('numTestsModal').classList.add('active');
-                };
-
-        function startTests() {
-            totalTests = parseInt(document.getElementById('numTestsInput').value);
-            if (totalTests < 1 || totalTests > allFunctionalities.length) {
-                alert('Nombre invalide!');
-                return;
-            }
-            
-            document.getElementById('numTestsModal').classList.remove('active');
-            testStarted = true;
-            document.getElementById('startBtn').disabled = true;
-            results = [];
-            nextFunctionality();
-        }
-
-        function nextFunctionality() {
-            if (currentTest >= totalTests) {
-                finishTest();
-                return;
-            }
-            
-            currentTest++;
-            clickCount = 0;
-            clickedPath = [];
-            currentFunctionality = allFunctionalities[Math.floor(Math.random() * allFunctionalities.length)];
-            
-            document.getElementById('targetDisplay').style.display = 'block';
-            document.getElementById('targetName').textContent = currentFunctionality.split('/').pop();
-            updateDisplay();
-            
-            startTime = Date.now();
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(updateTimer, 100);
-        }
-
-        function updateTimer() {
-            if (!startTime) return;
-            const elapsed = (Date.now() - startTime) / 1000;
-            document.getElementById('timer').textContent = elapsed.toFixed(1) + 's';
-        }
-
-        function updateDisplay() {
-            document.getElementById('progress').textContent = `${currentTest}/${totalTests}`;
-            document.getElementById('clicks').textContent = clickCount;
-        }
-
-        function endCurrentTest(found) {
-            clearInterval(timerInterval);
-            const duration = (Date.now() - startTime) / 1000;
-            
-            results.push({
-                test_number: currentTest,
-                functionality: currentFunctionality,
-                functionality_name: currentFunctionality.split('/').pop(),
-                found: found,
-                duration_seconds: Math.round(duration * 100) / 100,
-                click_count: clickCount,
-                path_taken: clickedPath,
-                timestamp: new Date().toISOString()
-            });
-            
-            setTimeout(nextFunctionality, 1000);
-        }
-
-        function finishTest() {
-            testStarted = false;
-            clearInterval(timerInterval);
-            
-            const totalTime = results.reduce((sum, r) => sum + r.duration_seconds, 0);
-            const avgTime = totalTime / results.length;
-            const totalClicks = results.reduce((sum, r) => sum + r.click_count, 0);
-            const avgClicks = totalClicks / results.length;
-            
-            document.getElementById('resultStats').innerHTML = `
-                <p><strong>Tests complétés :</strong> ${results.length}</p>
-                <p><strong>Temps total :</strong> ${totalTime.toFixed(2)}s</p>
-                <p><strong>Temps moyen :</strong> ${avgTime.toFixed(2)}s</p>
-                <p><strong>Clics totaux :</strong> ${totalClicks}</p>
-                <p><strong>Clics moyens :</strong> ${avgClicks.toFixed(1)}</p>
-            `;
-            
-            document.getElementById('resultsModal').classList.add('active');
-        }
-
-        function downloadResults() {
-            const data = {
-                session_metadata: {
-                    arborescence_choice: selectedTree,
-                    total_tests: totalTests,
-                    completed_tests: results.length,
-                    total_time_seconds: results.reduce((sum, r) => sum + r.duration_seconds, 0),
-                    average_time_seconds: results.reduce((sum, r) => sum + r.duration_seconds, 0) / results.length,
-                    total_clicks: results.reduce((sum, r) => sum + r.click_count, 0),
-                    average_clicks: results.reduce((sum, r) => sum + r.click_count, 0) / results.length,
-                    session_start: results[0].timestamp,
-                    session_end: new Date().toISOString()
-                },
-                results: results
+                const isOpen = childContainer.style.display === 'block';
+                childContainer.style.display = isOpen ? 'none' : 'block';
+                icon.textContent = isOpen ? '▶' : '▼';
             };
-            
-            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `test_results_${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
+
+            renderTree(value, childContainer, currentPath);
+            div.appendChild(item);
+            div.appendChild(childContainer);
+        } else {
+            item.onclick = () => handleLeafClick(currentPath, item);
+            div.appendChild(item);
         }
+
+        const text = document.createTextNode(key);
+        item.appendChild(text);
+        container.appendChild(div);
+    }
+}
+
+function handleLeafClick(path, element) {
+    if (!testStarted) return;
+
+    clickCount++;
+    updateDisplay();
+    clickedPath.push({type: 'click', path: path, timestamp: Date.now()});
+
+    if (path === currentFunctionality) {
+        element.classList.add('correct');
+        setTimeout(() => endCurrentTest(true), 500);
+    } else {
+        element.classList.add('wrong');
+        setTimeout(() => element.classList.remove('wrong'), 500);
+        alert(`Mauvaise fonctionnalité!\nVous avez sélectionné "${path.split('/').pop()}" au lieu de "${currentFunctionality.split('/').pop()}"`);
+    }
+}
+
+function updateTimer() {
+    if (!startTime) return;
+    const elapsed = (Date.now() - startTime) / 1000;
+    document.getElementById('timer').textContent = elapsed.toFixed(1) + 's';
+}
+
+function updateDisplay() {
+    document.getElementById('progress').textContent = `${currentTest}/${totalTests}`;
+    document.getElementById('clicks').textContent = clickCount;
+}
     </script>
 </body>
 </html>
