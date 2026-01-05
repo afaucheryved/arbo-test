@@ -374,16 +374,6 @@
         </div>
     </div>
 
-    <!-- Modal nombre de tests -->
-    <div class="modal" id="numTestsModal">
-        <div class="modal-content">
-            <h2>Nombre de tests</h2>
-            <p>Combien de fonctionnalités voulez-vous tester ?</p>
-            <input type="number" id="numTestsInput" min="1" value="7">
-            <p style="text-align: center; color: #666; margin-bottom: 15px;"><small>(Conseillé : 7)</small></p>
-            <button class="start-btn" onclick="startTests()">Commencer</button>
-        </div>
-    </div>
 
     <!-- Modal résultats -->
     <div class="modal results-modal" id="resultsModal">
@@ -411,6 +401,32 @@
         let clickedPath = [];
         let results = [];
         let timerInterval = null;
+
+        // Liste ordonnée des fonctions à rechercher (ordre fixe pour toutes les saisons)
+        const orderedFunctions = [
+            "Custom",
+            "Serve slice",
+            "Two to Stereo",
+            "Radian to degrees",
+            "ADSR",
+            "Brownian",
+            "Sawtooth",
+            "Load Audio",
+            "Range",
+            "HTTP Text",
+            "HigherThan",
+            "Sqrt",
+            "Cos",
+            "Parse Json",
+            "Diff ?+retain",
+            "Smooth",
+            "UDP",
+            "Get Component",
+            "Fade In",
+            "Click",
+            "Number"
+        ];
+        let globalFunctionIndex = 0; // Index global dans orderedFunctions
 
         // Définition des ordres de saison
         const seasons = {
@@ -537,7 +553,7 @@
                     "Smooth": null,
                     "Speed Multiplier": null
                 }
-            
+
             },
             2: {
                 "1. Sources et Entrées": {
@@ -857,7 +873,7 @@
                 "IHM": { "click": null, "Text": null, "Range": null, "Number": null },
                 "Input Data": {
                     "Web Search": { "HTTP Text": null, "HTTP Audio": null },
-                    "Input Files": { "Load Text": null, "Load CSV": null, "Load XLSX": null, "Load Image": null,"Load Audio":null }
+                    "Input Files": { "Load Text": null, "Load CSV": null, "Load XLSX": null, "Load Image": null, "Load Audio": null }
                 },
                 "Configuration Audio Output": {
                     "Two to Stereo": null, "Mono to all Channels": null, "Several to mono": null
@@ -881,21 +897,20 @@
             selectedSeason = season;
             treesOrder = seasons[season];
             document.getElementById('seasonModal').classList.remove('active');
-            document.getElementById('numTestsModal').classList.add('active');
+            // Démarrer directement les tests (plus de modal de choix)
+            startTests();
         }
 
         // Fonction pour démarrer les tests
         function startTests() {
-            totalTests = parseInt(document.getElementById('numTestsInput').value);
-            if (totalTests < 1) {
-                // alert('Nombre invalide !'); // Removed alert
-                return;
-            }
-            document.getElementById('numTestsModal').classList.remove('active');
+            // Calculer automatiquement le nombre de tests par arborescence
+            totalTests = Math.floor(orderedFunctions.length / treesOrder.length); // 21 / 3 = 7
+
             testStarted = true;
             currentTest = 0;
             results = [];
             currentTreeIndex = 0;
+            globalFunctionIndex = 0; // Initialiser l'index global
             startNextTreeTests();
         }
 
@@ -948,7 +963,14 @@
             currentTest++;
             clickCount = 0;
             clickedPath = [];
-            currentFunctionality = allFunctionalities[Math.floor(Math.random() * allFunctionalities.length)];
+
+            // Utiliser l'ordre fixe au lieu de l'aléatoire
+            const targetFunctionName = orderedFunctions[globalFunctionIndex];
+            globalFunctionIndex++;
+
+            // Trouver le chemin complet de cette fonction dans l'arborescence actuelle
+            currentFunctionality = findFunctionPath(trees[selectedTree], targetFunctionName);
+
             document.getElementById('targetDisplay').style.display = 'block';
             document.getElementById('targetName').textContent = currentFunctionality.split('/').pop();
             updateDisplay();
@@ -1042,6 +1064,31 @@
                 }
             }
             return funcs;
+        }
+
+        // Fonction pour trouver le chemin d'une fonction par son nom dans une arborescence
+        function findFunctionPath(tree, targetName, path = "") {
+            for (let [key, value] of Object.entries(tree)) {
+                const currentPath = path ? `${path}/${key}` : key;
+
+                // Normaliser les noms pour la comparaison (ignorer la casse et les espaces)
+                const normalizedKey = key.toLowerCase().trim();
+                const normalizedTarget = targetName.toLowerCase().trim();
+
+                if (value === null) {
+                    // C'est une feuille
+                    if (normalizedKey === normalizedTarget) {
+                        return currentPath;
+                    }
+                } else {
+                    // C'est un nœud parent, chercher dans les enfants
+                    const found = findFunctionPath(value, targetName, currentPath);
+                    if (found) {
+                        return found;
+                    }
+                }
+            }
+            return null; // Non trouvé
         }
 
         // Fonction pour afficher une arborescence
