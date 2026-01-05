@@ -330,7 +330,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎵 Test d'arborescence - MODE DEBUG ACTUALISÉ</h1>
+            <h1>🎵 Test d'arborescence - V2 (Fixed Order)</h1>
             <p>Trouvez les fonctionnalités le plus rapidement possible</p>
         </div>
 
@@ -1147,7 +1147,12 @@
             updateDisplay();
             clickedPath.push({ type: 'click', path: path, timestamp: Date.now() });
 
-            if (path === currentFunctionality) {
+            // Comparaison basée sur le nom de la fonction uniquement (pas le chemin complet)
+            // Cela permet de gérer les doublons (ex: "Load Audio" présent 2 fois dans l'arbo 3)
+            const clickedName = path.split('/').pop().toLowerCase().trim();
+            const targetName = currentFunctionality.split('/').pop().toLowerCase().trim();
+
+            if (clickedName === targetName) {
                 element.classList.add('correct');
                 setTimeout(() => endCurrentTest(true), 500);
             } else {
